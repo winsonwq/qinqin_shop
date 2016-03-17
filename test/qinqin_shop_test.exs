@@ -1,7 +1,50 @@
 defmodule QinqinShopTest do
   use ExUnit.Case
+  alias Decimal, as: D
 
-  test "" do
+  @items [
+    %Item{ bar_code: "ITEM00001", name: "可口可乐", unit_price: 3, unit: "瓶" },
+    %Item{ bar_code: "ITEM00002", name: "羽毛球", unit_price: 1, unit: "个" },
+    %Item{ bar_code: "ITEM00003", name: "苹果", unit_price: 5.5, unit: "斤" }
+  ]
+
+  @strategies [
+    %{ priority: 0, items: ["ITEM00001"], mark: { :buy_two_get_one_free } },
+    %{ priority: 1, items: ["ITEM00001", "ITEM00002"], mark: { :percent_discount, 0.95 } }
+  ]
+
+  test "find item with matched strategy for ITEM00001" do
+    shop = %QinqinShop{ strategies: @strategies, items: @items }
+    assert %{ mark: { :buy_two_get_one_free }, item: @items |> Enum.at(0) } == QinqinShop.find_item_with_strategy_mark("ITEM00001", shop)
+  end
+
+  test "find item with matched strategy for ITEM00002" do
+    shop = %QinqinShop{ strategies: @strategies, items: @items }
+    assert %{ mark: { :percent_discount, 0.95 }, item: @items |> Enum.at(1) } == QinqinShop.find_item_with_strategy_mark("ITEM00002", shop)
+  end
+
+  test "find item with matched strategy for ITEM00003" do
+    shop = %QinqinShop{ strategies: @strategies, items: @items }
+    assert %{ mark: { nil }, item: @items |> Enum.at(2) } == QinqinShop.find_item_with_strategy_mark("ITEM00003", shop)
+  end
+
+  test "calculate shopping item ITEM00001 with quantity 3 and related strategy" do
+    shop = %QinqinShop{ strategies: @strategies, items: @items }
+    %{ total_price: total_price, saving_price: saving_price, mark: mark } = QinqinShop.calculate_item_price("ITEM00001", 3, shop)
+
+    assert total_price |> D.equal?(D.new(6))
+    assert saving_price |> D.equal?(D.new(3))
+    assert { :buy_two_get_one_free } == mark
+
+  end
+
+  test "calculate shopping item ITEM00002 with quantity 3 and related strategy" do
+    shop = %QinqinShop{ strategies: @strategies, items: @items }
+    %{ total_price: total_price, saving_price: saving_price, mark: mark } = QinqinShop.calculate_item_price("ITEM00002", 3, shop)
+
+    assert total_price |> D.equal?(D.new(2.85))
+    assert saving_price |> D.equal?(D.new(0.15))
+    assert { :percent_discount, 0.95 } == mark
 
   end
 
