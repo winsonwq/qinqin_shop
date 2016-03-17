@@ -9,15 +9,12 @@ defmodule QinqinShop do
 
   defstruct [:strategies, :items]
 
-  def find_item_with_strategy_mark(bar_code, %QinqinShop{ strategies: strategies, items: items }) do
+  def find_item_with_strategy_mark(bar_code, quantity, %QinqinShop{ strategies: strategies, items: items }) do
     items
       |> Enum.filter(&(&1.bar_code == bar_code))
       |> Enum.map(fn(item) ->
 
-        %{ mark: mark } =
-          Strategy.find_all_matched(strategies, item.bar_code)
-            |> List.first
-          || %{ mark: { nil } }
+        %{ mark: mark } = Strategy.find_matched_strategy(strategies, item.bar_code, quantity) || %{ mark: { nil } }
 
         %{ item: item, mark: mark }
       end)
@@ -25,7 +22,7 @@ defmodule QinqinShop do
   end
 
   def calculate_item_price(bar_code, quantity, shop) do
-    %{ mark: mark, item: item } = find_item_with_strategy_mark(bar_code, shop)
+    %{ mark: mark, item: item } = find_item_with_strategy_mark(bar_code, quantity, shop)
 
     total_price = Calculator.calculate(mark, item, quantity)
     saving_price = Calculator.calculate({ nil }, item, quantity) |> Decimal.sub(total_price)
