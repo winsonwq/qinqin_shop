@@ -16,12 +16,12 @@ defmodule QinqinShop do
 
         %{ mark: mark } =
           Strategy.find_all_matched(strategies, item.bar_code)
-            |> Enum.at(0)
+            |> List.first
           || %{ mark: { nil } }
 
         %{ item: item, mark: mark }
       end)
-      |> Enum.at(0)
+      |> List.first
   end
 
   def calculate_item_price(bar_code, quantity, shop) do

@@ -17,7 +17,7 @@ defmodule QinqinShopTest do
 
   test "find item with matched strategy for ITEM00001" do
     shop = %QinqinShop{ strategies: @strategies, items: @items }
-    assert %{ mark: { :buy_x_get_y_free, 2, 1 }, item: @items |> Enum.at(0) } == QinqinShop.find_item_with_strategy_mark("ITEM00001", shop)
+    assert %{ mark: { :buy_x_get_y_free, 2, 1 }, item: @items |> List.first } == QinqinShop.find_item_with_strategy_mark("ITEM00001", shop)
   end
 
   test "find item with matched strategy for ITEM00002" do

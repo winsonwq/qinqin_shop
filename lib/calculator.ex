@@ -2,10 +2,6 @@ defmodule Calculator do
 
   alias Decimal, as: D
 
-  def calculate({ :buy_x_get_y_free, x, _ }, item, quantity) when quantity <= x do
-    calculate({ nil }, item, quantity)
-  end
-
   def calculate({ :buy_x_get_y_free, x, y }, %Item{ unit_price: unit_price }, quantity) do
     0..(quantity - 1)
       |> Enum.filter(fn idx -> rem(idx, x + y) < x end)
