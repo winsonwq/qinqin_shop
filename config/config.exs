@@ -21,20 +21,6 @@ use Mix.Config
 #     config :logger, level: :info
 #
 
-config :qinqin_shop,
-  strategies: %{
-    buy_two_get_one_free: %{
-      priority: 0,
-      items: ["ITEM00001"],
-      mark: { :buy_two_get_one_free }
-    },
-    percent_discount_95: %{
-      priority: 1,
-      items: ["ITEM00001", "ITEM00002"],
-      mark: { :percent_discount, 0.95 }
-    }
-  }
-
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
 # by uncommenting the line below and defining dev.exs, test.exs and such.

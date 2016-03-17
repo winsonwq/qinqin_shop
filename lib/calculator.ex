@@ -2,12 +2,15 @@ defmodule Calculator do
 
   alias Decimal, as: D
 
-  def calculate({ :buy_two_get_one_free }, %Item{ unit_price: unit_price }, quantity) do
-    pricing_item_count = div(quantity, 2)
-      |> D.new
-      |> D.add(D.new(rem(quantity, 2)))
+  def calculate({ :buy_x_get_y_free, x, _ }, item, quantity) when quantity <= x do
+    calculate({ nil }, item, quantity)
+  end
 
-    D.new(unit_price) |> D.mult(D.new(pricing_item_count))
+  def calculate({ :buy_x_get_y_free, x, y }, %Item{ unit_price: unit_price }, quantity) do
+    0..(quantity - 1)
+      |> Enum.filter(fn idx -> rem(idx, x + y) < x end)
+      |> Enum.map(fn _ -> D.new(unit_price) end)
+      |> Enum.reduce(&D.add(&1, &2))
   end
 
   def calculate({ :percent_discount, percent }, %Item{ unit_price: unit_price }, quantity) when percent < 1 do
