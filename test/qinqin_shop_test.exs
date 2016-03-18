@@ -17,17 +17,17 @@ defmodule QinqinShopTest do
 
   test "find item with matched strategy for ITEM00001" do
     shop = %QinqinShop{ strategies: @strategies, items: @items }
-    assert %{ mark: { :buy_x_get_y_free, 2, 1 }, item: @items |> List.first } == QinqinShop.find_item_with_strategy_mark("ITEM00001", 3, shop)
+    assert %{ mark: { :buy_x_get_y_free, 2, 1 } } = QinqinShop.find_item_with_strategy_mark("ITEM00001", 3, shop)
   end
 
   test "find item with matched strategy for ITEM00002" do
     shop = %QinqinShop{ strategies: @strategies, items: @items }
-    assert %{ mark: { :percent_discount, 0.95 }, item: @items |> Enum.at(1) } == QinqinShop.find_item_with_strategy_mark("ITEM00002", 1, shop)
+    assert %{ mark: { :percent_discount, 0.95 } } = QinqinShop.find_item_with_strategy_mark("ITEM00002", 1, shop)
   end
 
   test "find item with matched strategy for ITEM00003" do
     shop = %QinqinShop{ strategies: @strategies, items: @items }
-    assert %{ mark: { nil }, item: @items |> Enum.at(2) } == QinqinShop.find_item_with_strategy_mark("ITEM00003", 1, shop)
+    assert %{ mark: { nil } } = QinqinShop.find_item_with_strategy_mark("ITEM00003", 1, shop)
   end
 
   test "calculate shopping item ITEM00001 with quantity 3 and related strategy" do
