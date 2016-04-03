@@ -11,14 +11,14 @@ defmodule QinqinShop do
 
   def find_item_with_strategy_mark(bar_code, quantity, %QinqinShop{ strategies: strategies, items: items }) do
     items
-      |> Enum.filter(&(&1.bar_code == bar_code))
-      |> Enum.map(fn(item) ->
+    |> Enum.filter(&(&1.bar_code == bar_code))
+    |> Enum.map(fn(item) ->
 
-        %{ mark: mark } = Strategy.find_matched_strategy(strategies, item.bar_code, quantity) || %{ mark: { nil } }
+      %{ mark: mark } = Strategy.find_matched_strategy(strategies, item.bar_code, quantity) || %{ mark: { nil } }
 
-        %{ item: item, mark: mark }
-      end)
-      |> List.first
+      %{ item: item, mark: mark }
+    end)
+    |> List.first
   end
 
   def calculate_item_price(bar_code, quantity, shop) do
